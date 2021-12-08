@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-cmake_minimum_required(VERSION 3.5.2)
+cmake_minimum_required(VERSION 3.5.1)
 
 project(ws C)
 
@@ -32,7 +32,7 @@ add_library(ws
 if(WIN32)
 	target_link_libraries(ws pthread ws2_32 -static)
 else()
-	target_link_libraries(ws pthread)
+	target_link_libraries(ws pthread -static)
 endif(WIN32)
 
 add_executable(send_receive
