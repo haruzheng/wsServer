@@ -17,7 +17,7 @@ CC      ?= gcc
 WSDIR    = $(CURDIR)/../
 INCLUDE  = -I $(WSDIR)/include
 CFLAGS   =  -Wall -Wextra -O2
-CFLAGS  +=  $(INCLUDE) -std=c99 -pthread -pedantic
+CFLAGS  +=  $(INCLUDE) -std=gnu99 -pthread -pedantic -static
 LIB      =  $(WSDIR)/libws.a
 
 # Check if verbose examples
@@ -28,11 +28,15 @@ endif
 .PHONY: all clean
 
 # Examples
-all: send_receive
+all: send_receive cmd_test
 
 # Send receive
 send_receive: send_receive.c $(LIB)
 	$(CC) $(CFLAGS) $(LDFLAGS) send_receive.c -o send_receive $(LIB)
+
+# Cmd test
+cmd_test: cmd_test.c $(LIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) cmd_test.c -o cmd_test $(LIB)
 
 # Clean
 clean:
