@@ -77,7 +77,7 @@ PKGDIR = $(LIBDIR)/pkgconfig
 
 # All
 ifeq ($(AFL_FUZZ),no)
-all: libws.a examples
+all: libws.a libjson-c.a examples
 else
 all: libws.a fuzzy
 endif
@@ -85,6 +85,18 @@ endif
 # Library
 libws.a: $(OBJ)
 	$(AR) $(ARFLAGS) $(LIB) $^
+
+libjson-c.a:
+	@echo "Processing JSON-C Library"
+	@echo "Get Config from Cmake"
+	@rm -rf ./json-c/build ./lib/libjson-c.a
+	@mkdir ./json-c/build
+	@cd ./json-c/build; cmake ../
+	@$(CC) -D_GNU_SOURCE -I./json-c -I./json-c/build -ffunction-sections -fdata-sections -Werror -Wall -Wcast-qual -Wno-error=deprecated-declarations -Wextra -Wwrite-strings -Wno-unused-parameter -Wstrict-prototypes -g -fPIC   -D_REENTRANT -c ./json-c/*.c
+	@ar qc libjson-c.a  *.o
+	@rm *.o
+	@ranlib ./libjson-c.a
+	@echo "Done"
 
 # Examples
 examples: libws.a
@@ -154,8 +166,8 @@ doc:
 
 # Clean
 clean:
-	@rm -f $(OBJ)
-	@rm -f $(LIB)
+	@rm -f $(OBJ) *.o
+	@rm -f $(LIB) *.a
 	@$(MAKE) clean -C example/
 	@$(MAKE) clean -C tests/
 	@$(MAKE) clean -C tests/fuzzy
